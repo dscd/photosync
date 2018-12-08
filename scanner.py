@@ -2,12 +2,19 @@
 
 import os
 
+import constants as cn
 from database import model
 from PIL import Image, ExifTags
 
 
 
 PHOTO_TYPE = ["jpg"]
+
+
+def _from_exif_real(value):
+	"""Gets value from EXIF REAL type = tuple(numerator, denominator)"""
+	return value[0]/value[1]*1.0  # To avoid returning integer
+
 
 class Scanner(object):
 	"""Scans initial information from photo files.
@@ -41,11 +48,37 @@ class Scanner(object):
 		"""
 		exifData = {}
 		img = Image.open(filename)
-		exifDataRaw = img._getexif()
-		for tag, value in exifDataRaw.items():
-    	decodedTag = ExifTags.TAGS.get(tag, tag)
-    	exifData[decodedTag] = value
-    return model.Photo()
+		exif_real = {ExifTags.TAGS.get(k, k): v for k, v in img._getexif().items()}
+    return model.Photo(
+    	  name=filename,
+  		  width=img.width,
+  	  	height=img.height,
+  	  	date_original=datetime.datetime.strptime(
+  	  		exif_real[cn.EXIF_DATE_ORIGINAL], cn.EXIF_DATE_FORMAT),
+  			aperture=_from_exif_real(exif_real[cn.EXIF_APERTURE]),
+  		  shutter=_from_exif_real(exif_real[cn.EXIF_SHUTTER]),
+  	  	iso=exif_real[cn.EXIF_ISO],
+  			metering_mode=cn.MeteringMode(exif_real[cn.EXIF_METERING_MODE]).name,
+  		  exposure_mode=cn.ExposureMode(exif_real[cn.EXIF_EXPOSIRE_MODE]).name,
+  # # White balance
+  # white_balance = Column(String)
+  # # Camera model
+  # camera = Column(String)
+  # # Camera id
+  # camera_id = Column(String)
+  # # Lens type
+  # lens_type = Column(String)
+  # # Lens serial no
+  # lens_serial = Column(String)
+  # # GPS Latitude
+  # gps_lat = Column(String)
+  # # GPS longitude
+  # gps_long = Column(String)
+  # # comments
+  # comments = Column(String)
+  # # thumbnail
+  # thumbnail = Column(LargeBinary)
+  )
 
 
 
