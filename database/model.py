@@ -54,10 +54,14 @@ class Photo(Base, to_dict_mixin):
   gps_lat = Column(String)
   # GPS longitude
   gps_long = Column(String)
+  # GPS altitude
+  gps_alt = Column(Float)
+  # GPS datetimestamp
+  gps_datetime = Column(DateTime)
   # comments
   comments = Column(String)
-  # thumbnail
-  thumbnail = Column(LargeBinary)
+  # focal length, mm
+  focal_length = Column(Float)
 
   locations = relationship("Location")
 

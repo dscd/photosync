@@ -24,10 +24,12 @@ PHOTOS = [
      'camera_id': '123ABC',
      'lens_type': 'EF-S 18-135',
      'lens_serial': '234ZXC',
-     'gps_lat': '37.12345',
-     'gps_long': '122.23456',
+     'gps_lat': "37 12' 34.5''N",
+     'gps_long': "122 23'45.6''W",
+     'gps_alt': 123.4,
+     'gps_datetime': datetime.datetime(2018, 1, 1, 15,0,0),   
      'comments': 'comment1',
-     'thumbnail': b'abcdef\x02\x03'},
+     'focal_length': 5.5},
     {'id': 234,
      'name': 'photo2',
      'width': 640,
@@ -43,10 +45,12 @@ PHOTOS = [
      'camera_id': '123C',
      'lens_type': 'EF-S 18-135',
      'lens_serial': '234ABC',
-     'gps_lat': '37.12345',
-     'gps_long': '122.23456',
+     'gps_lat': "37 12' 34.5''N",
+     'gps_long': "122 23'45.6''W",
+     'gps_alt': 12.4,
+     'gps_datetime': datetime.datetime(2018, 1, 1, 15,0,2),   
      'comments': 'comment1',
-     'thumbnail': b'abcdef\x02\x03'},
+     'focal_length': 5.6},
     {'id': 345,
      'name': 'photo3',
      'width': 1024,
@@ -62,10 +66,12 @@ PHOTOS = [
      'camera_id': '123ABC',
      'lens_type': 'EF-S 18-135',
      'lens_serial': '234ZXC',
-     'gps_lat': '37.12345',
-     'gps_long': '122.23456',
+     'gps_lat': "37 12' 34.5''N",
+     'gps_long': "122 23'45.6''W",
+     'gps_alt': 1.4,
+     'gps_datetime': datetime.datetime(2018, 1, 2, 11,0,0),   
      'comments': 'comment2',
-     'thumbnail': b'abcdefrf\x02\x03'},
+     'focal_length': 15.5},
 ]
 BACKUPS = [
     {'id': 1,
@@ -111,9 +117,6 @@ class ModelTest(unittest.TestCase):
     
     model.Base.metadata.create_all(engine)
     self.session = session_factory()
-    # self.session.begin_nested()
-    # import pdb
-    # pdb.set_trace()
     self._create_db()
 
   def tearDown(self):
@@ -161,10 +164,12 @@ class ModelTest(unittest.TestCase):
         camera_id='123ABCDEF',
         lens_type='EF-S 70-200',
         lens_serial='234FDC',
-        gps_lat='37.12345',
-        gps_long='122.23456',
+        gps_lat="37 12' 34.5''N",
+        gps_long="122 23'45.6''W",
+        gps_alt=1.4,
+        gps_datetime=datetime.datetime(2018, 1, 2, 11,0,0),   
         comments='comment1',
-        thumbnail=b'abcdef\x00\x01')
+        focal_length=15.5)
     self.session.add(new_photo)
     self.session.commit()
     self.assertEqual(new_photo, self.session.query(model.Photo).filter(
