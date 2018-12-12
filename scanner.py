@@ -1,6 +1,7 @@
 """Initial photo file scan class."""
 
 import os
+import re
 
 import constants as cn
 from database import model
@@ -13,7 +14,28 @@ PHOTO_TYPE = ["jpg"]
 
 def _from_exif_real(value):
 	"""Gets value from EXIF REAL type = tuple(numerator, denominator)"""
-	return value[0]/value[1]*1.0  # To avoid returning integer
+	return value[0]/value[1]
+
+
+def _guard_GPS()
+
+
+def _from_GPS(tuple_tag, string_tag, pattern, default):
+	"""Gets information from GPS tuples and formats it according to pattern given
+
+	Args:
+	  tuple_tag: tag in GPS_TAGS containing tuple of tuples to format, or None.
+	  string_tag: tag in GPS_TAGS containing string information.
+	  pattern: str, pattern in %-format to format incoming tuples.
+	  default: returned if tuples is None,
+
+	Return:
+	  str: formatted string or default if tuple is None
+	"""
+	if tuples:
+		return (pattern % tuple(_from_exif_real(l) for l in tuple_tag) +
+			(string_tag,))
+	return default
 
 
 class Scanner(object):
@@ -33,10 +55,12 @@ class Scanner(object):
 
 	def scan(self):
 		"""Scans file information to Photo instances."""
+		filters = [re.compile(flt) for flt in cn.FILE_PATTERN]
 		for (dirpath, dirnames, filenames) in os.walk(self.path):
 			for f in filenames:
-				self._photos.append(self._scan_file(
-						os.path.join(self.path, dirpath, f)))
+				if any([re.search(flt, f) for flt in filters]):
+					self._photos.append(self._scan_file(
+							os.path.join(self.path, dirpath, f)))
 
 	def _scan_file(self, filename):
 		"""Make a photo object from a file.
@@ -48,7 +72,19 @@ class Scanner(object):
 		"""
 		exifData = {}
 		img = Image.open(filename)
-		exif_real = {ExifTags.TAGS.get(k, k): v for k, v in img._getexif().items()}
+		exif_real = {ExifTags.TAGS.get(k, ''): v for k, v in img._getexif().items()}
+		exif_GPS = gps_lat = gps_long = gpa_altitude = gps_datetime = ''
+		if 'GPSInfo' in exif_real:
+			exif_GPS = {ExifTags.GPSTAGS[k]: v
+			            for k, v in exif_phone['GPSInfo'].items()}
+			gps_lat=(exif_GPS[EXIF_GPS_LATITUDE], exif_GPS[EXIF_GPS_LATITUDE_REF],
+				"%d %d' %5.2f'' %s" , "0 0' 0.0'N"),
+  		gps_long=(exif_GPS[EXIF_GPS_LONGITUDE],
+  			exif_GPS[EXIF_GPS_LONGITUDE_REF],	"%d %d' %5.2f'' %s" , "0 0' 0.0'N")
+  		gps_altitude=_from_exif_real(exif_GPS[EXIF_GPS_ALTITUDE])
+  		gps_datetime=datetime.datetime.strptime('%s %d:%d:%d' % (
+  			exif_GPS[cn.EXIF_GPS_DATE],) + tuple(
+  			  _from_exif_real(l) for l in exif_GPS[cn.EXIF_GPS_TIME])),
     return model.Photo(
     	  name=filename,
   		  width=img.width,
@@ -60,24 +96,18 @@ class Scanner(object):
   	  	iso=exif_real[cn.EXIF_ISO],
   			metering_mode=cn.MeteringMode(exif_real[cn.EXIF_METERING_MODE]).name,
   		  exposure_mode=cn.ExposureMode(exif_real[cn.EXIF_EXPOSIRE_MODE]).name,
-  # # White balance
-  # white_balance = Column(String)
-  # # Camera model
-  # camera = Column(String)
-  # # Camera id
-  # camera_id = Column(String)
-  # # Lens type
-  # lens_type = Column(String)
-  # # Lens serial no
-  # lens_serial = Column(String)
-  # # GPS Latitude
-  # gps_lat = Column(String)
-  # # GPS longitude
-  # gps_long = Column(String)
-  # # comments
-  # comments = Column(String)
-  # # thumbnail
-  # thumbnail = Column(LargeBinary)
+  			white_balance=cn.WhiteBalance(exif_real[cn.EXIF_WHITE_BALANCE]).name,
+  			camera=' '.join(exif_real[cn.EXIF_CAMERA_MAKE],
+  				              exif_real[cn.EXIF_CAMERA_MODEL]),
+  			camera_id=exif_real[cn.EXIF_CAMERA_ID],
+    		lens_type=exif_real[cn.EXIF_LENS_MODEL],
+  			lens_serial=exif_real[cn.EXIF_LENS_SERIAL_NUMBER],
+  			gps_lat=gps_lat,
+  			gps_long=gps_long,
+  			gps_altitude=gps_altitude,
+  			gps_datetime=gps_datetime,
+  			comments='',
+  			focal_length=_from_exif_real(exif_real[cn.EXIF_FOCAL_LENGTH]),
   )
 
 

@@ -2,6 +2,9 @@
 
 from enum import Enum
 
+# File search pattern, list of regexps
+FILE_PATTERN = ['.*jpg$']
+
 # Date format in photo files EXIF
 EXIF_DATE_FORMAT = '%Y:%m:%d %H:%M:%S'
 
@@ -11,7 +14,20 @@ EXIF_APERTURE = 'FNumber'
 EXIF_SHUTTER = 'ExposureTime'
 EXIF_ISO = 'IsoSpeedRatings'
 EXIF_METERING_MODE = 'MeteringMode'
-EXIF_EXPOSIRE_MODE = 'ExposureMode'
+EXIF_EXPOSURE_MODE = 'ExposureMode'
+EXIF_WHITE_BALANCE = 'WhiteBalance'
+EXIF_CAMERA_MAKE = 'Make'
+EXIF_CAMERA_MODEL = 'Model'
+EXIF_CAMERA_ID = 'BodySerialNumber'
+EXIF_LENS_MODEL = 'LensModel'
+EXIF_LENS_SERIAL_NUMBER = 'LensSerialNumber'
+EXIF_GPS_LATITUDE = 'GPSLatitude'
+EXIF_GPS_LATITUDE_REF = 'GPSLatitudeRef'
+EXIF_GPS_LONGITUDE = 'GPSLongitude'
+EXIF_GPS_LONGITUDE_REF = 'GPSLongitude'
+EXIF_GPS_ALTITUDE = 'GPSAltitude'
+EXIF_GPS_DATE = 'GPSDateStamp'
+EXIF_GPS_TIME = 'GPSTimeStamp'
 
 
 #Enums
@@ -28,8 +44,13 @@ class MeteringMode(Enum):
 
 
 class ExposureMode(Enum):
-  """Exposire mode"""
+  """Exposure mode"""
   AUTO = 0
   MANUAL = 1
   AUTOBRACKET = 2
 
+
+class WhiteBalance(Enum):
+  """White Balace"""
+  AUTO = 0
+  MANUAL = 1
