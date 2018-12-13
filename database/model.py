@@ -66,9 +66,8 @@ class Photo(Base, to_dict_mixin):
   locations = relationship("Location")
 
   def __repr__(self):
-    return "<Photo(name='%s', id=%d, date_original='%s')>" % (
-      self.name, self.id, self.date_original)
-
+    return "<Photo(name='%s', date_original='%s')>" % (
+      self.name, self.date_original)
 
 
 class Backup(Base, to_dict_mixin):
@@ -83,8 +82,8 @@ class Backup(Base, to_dict_mixin):
   description = Column(String)
 
   def __repr__(self):
-    return "<Backup(name='%s', id=%d, description='%s')>" % (
-      self.name, self.id, self.description)
+    return "<Backup(name='%s', description='%s')>" % (
+      self.name, self.description)
 
   #photos = relationship("Location", back_populates="backup")
 
