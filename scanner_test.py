@@ -67,7 +67,10 @@ class ScannerTest(unittest.TestCase):
 
   def test_scanned_content(self):
     """Tests length of scanned list."""
-    self.assertEqual(PHOTOS, [x.columns_to_dict() for x in self.scanner])
+    model_dicts = [x.columns_to_dict() for x in self.scanner]
+    for m in model_dicts:
+      m['name'] = os.path.relpath(m['name'])
+    self.assertEqual(PHOTOS, model_dicts)
 
 
 if __name__ == '__main__':
