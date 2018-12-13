@@ -1,12 +1,14 @@
 """Testing model class."""
 
 import datetime
-import sqlite3
 import unittest
 
 import sqlalchemy
 
-import model
+try:
+  import model
+except ImportError:
+  from . import model
 
 PHOTOS = [
     {'id': 123,
