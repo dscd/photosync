@@ -30,6 +30,9 @@ EXIF_GPS_DATE = 'GPSDateStamp'
 EXIF_GPS_TIME = 'GPSTimeStamp'
 EXIF_FOCAL_LENGTH = 'FocalLength'
 
+FLICKR_FILE = 'flickr_auth'
+FLICKR_USERNAME='schrecklichkeit'
+
 
 #Enums
 class MeteringMode(Enum):
