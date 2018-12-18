@@ -1,4 +1,4 @@
-"""Initial photo file scan class."""
+"""File storage support."""
 
 from collections import defaultdict
 import datetime
@@ -36,8 +36,8 @@ def _from_GPS(tuple_tag, string_tag, pattern, default):
 	return default
 
 
-class Scanner(object):
-	"""Scans initial information from photo files.
+class FileStorage(object):
+	"""Gets/Stores initial information from photo files.
 
 	Scans starting from root path recursively for all files defined as PHOTO_TYPE
 
@@ -78,6 +78,16 @@ class Scanner(object):
 			for f in filenames:
 				if any([re.search(flt, f) for flt in filters]):
 					self._photos.append(self._scan_file(os.path.join(dirpath, f)))
+
+	def store(self, photo_file, new_path):
+		"""Stores photo file into path into storage.
+
+		Args:
+		  photo_file: str, path to photo file
+		  new_path: str, path in storage to copy photo_file
+		"""
+		os.copy(photo_file, os.path.join(self.path, new_path))
+
 
 	def _scan_file(self, filename):
 		"""Make a photo object from a file.

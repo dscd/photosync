@@ -4,7 +4,7 @@ import datetime
 import os
 import unittest
 
-import scanner
+import file_storage
 
 PHOTOS = [{
     'id': None,
@@ -53,21 +53,21 @@ PHOTOS = [{
     ]
 
 
-class ScannerTest(unittest.TestCase):
+class FileStorageTest(unittest.TestCase):
   
   def setUp(self):
     self.maxDiff = None
     self.test_dir = os.path.join(os.path.dirname(__file__), 'testdata')
-    self.scanner = scanner.Scanner(self.test_dir)
-    self.scanner.scan()
+    self.file_storage = file_storage.FileStorage(self.test_dir)
+    self.file_storage.scan()
 
   def test_scanned_len(self):
     """Tests length of scanned list."""
-    self.assertEqual(2, len(self.scanner))
+    self.assertEqual(2, len(self.file_storage))
 
   def test_scanned_content(self):
     """Tests length of scanned list."""
-    model_dicts = [x.columns_to_dict() for x in self.scanner]
+    model_dicts = [x.columns_to_dict() for x in self.file_storage]
     for m in model_dicts:
       m['name'] = os.path.relpath(m['name'])
     self.assertEqual(PHOTOS, model_dicts)
